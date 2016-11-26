@@ -40,8 +40,8 @@ describe('Builder', () => {
 			it('should return expected value', function() {
 				let expected = builder.buildChain();
 				expect(expected).to.be.an.instanceof(Chain);
-				let commands = expected.commands;
-				expect(Object.keys(commands)).to.have.lengthOf(5);
+				let elements = expected.elements;
+				expect(Object.keys(elements)).to.have.lengthOf(5);
 			});
 		});
 		describe('with empty actions', () => {

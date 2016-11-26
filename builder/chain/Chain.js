@@ -1,10 +1,8 @@
 class Chain {
 
-	constructor(commands) {
-		this.commands = commands;
-		this.current = this.commands[0];
+	constructor(chainElements) {
+		this.elements = chainElements;
 	}
-
 
 }
 

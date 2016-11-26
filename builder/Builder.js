@@ -1,5 +1,5 @@
 let Chain = require('./chain/Chain');
-let Factory = require('./command/Factory');
+let ChainElementFactory = require('./chain/ChainElementFactory');
 
 class Builder {
 
@@ -26,8 +26,8 @@ class Builder {
 		if (!this.actions) {
 			throw 'actions should be initialize';
 		}
-		let commands = Factory.creates(this.actions);
-		let chain = new Chain(commands);
+		let chainElements = ChainElementFactory.creates(this.actions);
+		let chain = new Chain(chainElements);
 		return chain;
 	}
 
