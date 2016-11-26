@@ -32,6 +32,10 @@ class Spider {
 		return b = b.waitForVisible(selector, DEFAULT_TIMEOUT).getText(selector);
 	}
 
+	static pause(ms) {
+		return b = b.pause(ms);
+	}
+
 	static moveToObject(selector) {
 		return b = b.waitForVisible(selector, DEFAULT_TIMEOUT).moveToObject(selector);
 	}
