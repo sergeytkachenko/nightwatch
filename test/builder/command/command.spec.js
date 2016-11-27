@@ -11,7 +11,7 @@ let Command = require('../../../builder/command/Command');
 let Spider = require('../../../spider');
 
 describe('Command', () => {
-	sinon.stub(Spider, 'url', () => '');
+	sinon.stub(Spider, 'url', () => {});
 	describe('execute', () => {
 		var command = new Command(config.actions[0]);
 		it('should call expected methods', () => {

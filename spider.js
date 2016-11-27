@@ -4,13 +4,15 @@ let options = {
 		browserName: 'chrome'
 	}
 };
-let b = webdriverio
-	.remote(options)
-	.init();
+let b;
 
 let DEFAULT_TIMEOUT = 5000;
 
 class Spider {
+
+	static init() {
+		return b = webdriverio.remote(options).init();
+	}
 
 	static getBrowser() {
 		return b;
@@ -22,6 +24,10 @@ class Spider {
 
 	static getSource(url) {
 		return b = b.url(url).getSource();
+	}
+
+	static waitForVisible(selector) {
+		return b = b.waitForVisible(selector, DEFAULT_TIMEOUT);
 	}
 
 	static click(selector) {
@@ -38,6 +44,22 @@ class Spider {
 
 	static moveToObject(selector) {
 		return b = b.waitForVisible(selector, DEFAULT_TIMEOUT).moveToObject(selector);
+	}
+
+	static selectorExecute(selector) {
+		return b = b.selectorExecute(selector);
+	}
+
+	static executeAsync(fun, a) {
+		return b = b.executeAsync(fun, a);
+	}
+
+	static execute(fun, a) {
+		return b = b.execute(fun, a);
+	}
+
+	static end() {
+		return b = b.end();
 	}
 }
 

@@ -16,12 +16,12 @@
     },
     {
       "cmd": "text",
-      "params": ["#modell_8XFBSG .modell_list_td2 label:first-child"],
+      "params": [".modell_list_td2 label:first-child"],
       "key": "model name"
     },
     {
       "cmd": "text",
-      "params": ["#modell_8XFBSG .modell_list_td7 label:first-child"],
+      "params": [".modell_list_td7 label:first-child"],
       "key": "price"
     }
   ]

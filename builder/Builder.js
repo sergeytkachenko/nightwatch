@@ -11,11 +11,13 @@ class Builder {
 	/**
 	 * Parse actions and saved it.
 	 * @param {String} json Parsing json.
+	 * @return {Builder}
 	 */
 	fromJson(json) {
 		let config = this.parseJson(json);
 		this.key = config.key;
 		this.actions = config.actions;
+		return this;
 	}
 
 	/**
@@ -27,7 +29,7 @@ class Builder {
 			throw 'actions should be initialize';
 		}
 		let chainElements = ChainElementFactory.creates(this.actions);
-		let chain = new Chain(chainElements);
+		let chain = new Chain(chainElements[0]);
 		return chain;
 	}
 

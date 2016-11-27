@@ -8,8 +8,34 @@ class Command {
 		this.key = config.key;
 	}
 
+	/**
+	 * @return {Promise}
+	 */
 	execute() {
-		Spider[this.cmd].apply(Spider, this.params);
+		let method = Spider[this.cmd];
+		let params = this.params;
+		return method.apply(Spider, params);
+	}
+
+	calcElements() {
+		let selector = this.params[0];
+		selector = selector.replace(/\[loop-index='[0-9]+'\]/, '');
+		return Spider.waitForVisible(selector)
+			.execute(function(selector) {
+				var elements = document.querySelectorAll(selector);
+				elements.forEach(function(element, i) {
+					element.setAttribute('loop-index', i);
+				});
+			}, selector)
+			.elements(selector).then(elements => {
+				return elements.value.length;
+			});
+	}
+
+	setLoopIndexSelector(loopIndex) {
+		let selector = this.params[0];
+		selector = selector.replace(/\[loop-index='[0-9]+'\]/, '');
+		this.params[0] = `${selector}[loop-index='${loopIndex}']`
 	}
 }
 

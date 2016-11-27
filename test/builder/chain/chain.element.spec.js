@@ -10,9 +10,4 @@ let json = JSON.stringify(config);
 let Chain = require('../../../builder/chain/Chain');
 let ChainElement = require('../../../builder/chain/ChainElement');
 let Builder = require('../../../builder/Builder');
-let Command = require('../../../builder/command/Command');
 let Loop = require('../../../builder/Loop');
-
-describe('ChainElement', () => {
-
-});

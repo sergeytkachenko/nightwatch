@@ -10,20 +10,34 @@ class ChainElementFactory {
      *   "params": ["http://google.com.ua"]
      * }
 	 * @param {Object} actionConfig
+	 * @return {ChainElement}
 	 */
 	static create(actionConfig) {
 		let command = new Command(actionConfig);
-		let loop = new Loop();
+		let loop = actionConfig.loop ? new Loop() : null;
 		return new ChainElement({command, loop});
 	}
 
 	/**
 	 * Creates ChainElement array.
 	 * @param {Object[]} actionsConfig
-	 * @return {Command[]} ChainElement array.
+	 * @return {ChainElement[]} ChainElement array.
 	 */
 	static creates(actionsConfig) {
-		return actionsConfig.map(actionConfig => ChainElementFactory.create(actionConfig));
+		let chainElements = actionsConfig.map(actionConfig => ChainElementFactory.create(actionConfig));
+		return this.links(chainElements);
+	}
+
+	static links(chainElements) {
+		chainElements.forEach((chainElement, index) => {
+			let nextIndex = index + 1;
+			if (chainElements.length - 1 < nextIndex) {
+				return;
+			}
+			let next = chainElements[nextIndex];
+			chainElement.setNext(next);
+		});
+		return chainElements;
 	}
 
 }

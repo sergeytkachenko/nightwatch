@@ -36,4 +36,11 @@ describe('Loop', () => {
 			});
 		});
 	});
+	describe('increment', () => {
+		it('should increment loopIndex', function() {
+			let loop = new Loop();
+			loop.increment();
+			expect(loop.loopIndex).to.equal(1);
+		});
+	});
 });
