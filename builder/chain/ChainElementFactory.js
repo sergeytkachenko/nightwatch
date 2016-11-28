@@ -1,10 +1,11 @@
-let Command = require('../command/Command');
-let Loop = require('../Loop');
 let ChainElement = require('./ChainElement');
+let Command = require('../command/Command');
+let PaginationClick = require('../command/PaginationClick');
 
 class ChainElementFactory {
 
 	/**
+	 * @private
 	 * {
      *   "cmd": "url",
      *   "params": ["http://google.com.ua"]
@@ -13,9 +14,9 @@ class ChainElementFactory {
 	 * @return {ChainElement}
 	 */
 	static create(actionConfig) {
-		let command = new Command(actionConfig);
-		let loop = actionConfig.loop ? new Loop() : null;
-		return new ChainElement({command, loop});
+		// TODO abstract factory
+		let command = actionConfig.class ? new PaginationClick(actionConfig) : new Command(actionConfig);
+		return new ChainElement({command});
 	}
 
 	/**
@@ -24,20 +25,27 @@ class ChainElementFactory {
 	 * @return {ChainElement[]} ChainElement array.
 	 */
 	static creates(actionsConfig) {
-		let chainElements = actionsConfig.map(actionConfig => ChainElementFactory.create(actionConfig));
-		return this.links(chainElements);
+		let chainElements = actionsConfig
+			.map(actionConfig => ChainElementFactory.create(actionConfig))
+			.map(this.link);
+		return chainElements;
 	}
 
-	static links(chainElements) {
-		chainElements.forEach((chainElement, index) => {
-			let nextIndex = index + 1;
-			if (chainElements.length - 1 < nextIndex) {
-				return;
-			}
-			let next = chainElements[nextIndex];
-			chainElement.setNext(next);
-		});
-		return chainElements;
+	/**
+	 * Links next element for each element.
+	 * @private
+	 * @param {ChainElement} element
+	 * @param {Number} index
+	 * @param {ChainElement[]} elements
+	 * @return {ChainElement}
+	 */
+	static link(element, index, elements) {
+		if (!index) {
+			return element;
+		}
+		let prevElement = elements[index - 1];
+		prevElement.setNext(element);
+		return element;
 	}
 
 }

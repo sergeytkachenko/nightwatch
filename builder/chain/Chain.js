@@ -1,5 +1,5 @@
 const events = require('../Events');
-let Spider = require('../Builder');
+let Spider = require('../../spider');
 
 class Chain {
 
@@ -14,12 +14,11 @@ class Chain {
 
 	init() {
 		events.on('last-execute', () => this.run());
+		events.on('end-execute', () => this.end());
 	}
 
 	run() {
-		if (this.firstElement.hasIterations()) {
-			this.firstElement.execute();
-		}
+		this.firstElement.execute();
 	}
 
 	end() {

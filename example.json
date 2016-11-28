@@ -7,8 +7,9 @@
     },
     {
       "cmd": "click",
-      "params": [".modell_bild tr td"],
-      "loop": true
+      "params": [".modell_bild tr td.enabled[id]"],
+      "loop": true,
+      "class": "PaginationCommand"
     },
     {
       "cmd": "pause",

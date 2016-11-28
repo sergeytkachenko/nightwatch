@@ -58,6 +58,10 @@ class Spider {
 		return b = b.execute(fun, a);
 	}
 
+	static waitUntil(condition, timeout, timeoutMsg, interval) {
+		return b = b.waitUntil(condition, timeout, timeoutMsg, interval);
+	}
+
 	static end() {
 		return b = b.end();
 	}
