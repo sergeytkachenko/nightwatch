@@ -5,10 +5,11 @@ class Chain {
 
 	/**
 	 *
-	 * @param {ChainElement} firstElement
+	 * @param {Command} command
 	 */
-	constructor(firstElement) {
-		this.firstElement = firstElement;
+	constructor(command) {
+		this.command = command;
+		this.stack = null;
 		this.init();
 	}
 
@@ -18,7 +19,7 @@ class Chain {
 	}
 
 	run() {
-		this.firstElement.execute();
+		this.command.execute();
 	}
 
 	end() {

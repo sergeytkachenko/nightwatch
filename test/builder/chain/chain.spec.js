@@ -9,94 +9,43 @@ let config = require('../../../example.json');
 let json = JSON.stringify(config);
 let Chain = require('../../../builder/chain/Chain');
 let Builder = require('../../../builder/Builder');
+const events = require('../../../builder/Events');
+let Spider = require('../../../spider');
 
 describe('Chain', () => {
 	let builder = new Builder();
 	let chain;
 	beforeEach(() => {
 		chain = builder.fromJson(json).buildChain();
+		chain.command.execute = () => {};
+		Spider.url = () => new Promise(resolve => resolve());
+		Spider.end = () => new Promise(resolve => resolve());
 	});
-	describe('hasNext', () => {
-		describe('with has next chain element', () => {
-			it('should return expected value', () => {
-				expect(chain.hasNext()).to.be.true;
-			});
-		});
-		describe('with not has next chain element', () => {
-			chain = builder.fromJson(json).buildChain();
-			it('should return expected value', () => {
-				chain.chainElements = [1,2];
-				chain.currStepIndex = 2;
-				expect(chain.hasNext()).to.be.false;
-			});
-		});
-		describe('with chainElements is empty', () => {
-			chain = builder.fromJson(json).buildChain();
-			it('should return expected value', () => {
-				chain.chainElements = [];
-				expect(chain.hasNext()).to.be.false;
-			});
-		});
-	});
-	describe('hasPrev', () => {
-		describe('with not has prev chain element', () => {
-			it('should return expected value', () => {
-				expect(chain.hasPrev()).to.be.false;
-			});
-		});
-		describe('with has prev chain element', () => {
-			chain = builder.fromJson(json).buildChain();
-			it('should return expected value', () => {
-				chain.currStepIndex = 4;
-				expect(chain.hasPrev()).to.be.true;
-			});
-		});
-		describe('with chainElements is empty', () => {
-			chain = builder.fromJson(json).buildChain();
-			it('should return expected value', () => {
-				chain.chainElements = [];
-				chain.currStepIndex = 4;
-				expect(chain.hasPrev()).to.be.false;
-			});
-		});
-	});
-	describe('prev', () => {
-		describe('with not has prev chain element', () => {
-			it('should return expected value', () => {
-				expect(chain.prev()).to.be.false;
-			});
-		});
-		describe('with has prev chain element', () => {
-			let chainElement;
-			beforeEach(() => {
-				chainElement = chain.chainElements[3];
-				sinon.stub(chainElement, 'needLoop', () => {});
-			});
-			it('should return expected value', () => {
-				chain.currStepIndex = 4;
-				chain.prev();
-				sinon.assert.called(chainElement.needLoop);
-			});
-		});
-	});
-	describe('next', () => {
-		let chainElement;
+	describe('run', () => {
+		let executeFn;
 		beforeEach(() => {
-			chainElement = chain.chainElements[0];
-			sinon.stub(chainElement, 'run', () => {});
+			executeFn = sinon.spy(chain.command, 'execute');
 		});
-		describe('with has next chain element', () => {
-			it('should call expected method', () => {
-				chain.next();
-				sinon.assert.called(chainElement.run);
-			});
+		it('should call expected methods', () => {
+			chain.run();
+			sinon.assert.calledOnce(executeFn);
 		});
-		describe('with not has next chain element', () => {
-			it('should not call expected method', () => {
-				chain.currStepIndex = 4;
-				chain.next();
-				sinon.assert.notCalled(chainElement.run);
-			});
+	});
+	describe('init', () => {
+		let runFn;
+		let endFn;
+		beforeEach(() => {
+			runFn = sinon.spy(chain, 'run');
+			endFn = sinon.spy(chain, 'end');
+			chain.command.execute = () => {};
+		});
+		it('should call run', () => {
+			events.emit('last-execute');
+			sinon.assert.calledOnce(runFn);
+		});
+		it('should call end', () => {
+			events.emit('end-execute');
+			sinon.assert.calledOnce(endFn);
 		});
 	});
 });

@@ -9,7 +9,7 @@
       "cmd": "click",
       "params": [".modell_bild tr td.enabled[id]"],
       "loop": true,
-      "class": "PaginationCommand"
+      "class": "LoopClick"
     },
     {
       "cmd": "pause",

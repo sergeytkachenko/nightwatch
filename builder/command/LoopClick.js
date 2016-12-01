@@ -2,7 +2,7 @@ const events = require('../Events');
 let Command = require('./Command');
 let Spider = require('../../spider');
 
-class PaginationClick extends Command {
+class LoopClick extends Command {
 
 	constructor(config) {
 		super(config);
@@ -70,4 +70,4 @@ class PaginationClick extends Command {
 	}
 }
 
-module.exports = PaginationClick;
+module.exports = LoopClick;
