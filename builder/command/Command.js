@@ -17,12 +17,12 @@ class Command {
 	execute() {
 		let method = Spider[this.cmd];
 		let params = this.params;
-		return method.apply(Spider, params).then(this.nextExecute());
+		return method.apply(Spider, params).then(() => this.nextExecute());
 	}
 
 	/**
 	 * Execute next command.
-	 * @private
+	 * @protected
 	 * @return {Promise|undefined}
 	 */
 	nextExecute() {

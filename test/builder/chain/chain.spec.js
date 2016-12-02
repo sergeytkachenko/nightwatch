@@ -9,6 +9,7 @@ let config = require('../../../example.json');
 let json = JSON.stringify(config);
 let Chain = require('../../../builder/chain/Chain');
 let Builder = require('../../../builder/Builder');
+let Command = require('../../../builder/command/Command');
 const events = require('../../../builder/Events');
 let Spider = require('../../../spider');
 
@@ -46,6 +47,45 @@ describe('Chain', () => {
 		it('should call end', () => {
 			events.emit('end-execute');
 			sinon.assert.calledOnce(endFn);
+		});
+		it('should call clearLoopStack', () => {
+			events.emit('clear-loop-stack');
+			expect(chain.loopStack).to.be.null;
+		});
+		describe('when loopStack is null', () => {
+			it('should set loopStack', () => {
+				events.emit('set-loop-stack', 'command');
+				expect(chain.loopStack).to.equal('command');
+			});
+		});
+		describe('when loopStack is not null', () => {
+			beforeEach(() => {
+				chain.loopStack = 'cmd';
+			});
+			it('should set loopStack', () => {
+				events.emit('set-loop-stack', 'command');
+				expect(chain.loopStack).to.equal('cmd');
+			});
+		});
+	});
+	describe('hasOwnerLoopCommand', () => {
+		describe('when command is owner', () => {
+			beforeEach(() => {
+				chain.loopStack = chain.command;
+			});
+			it('should return expected value', () => {
+				let expected = chain.hasOwnerLoopCommand(chain.command);
+				expect(expected).to.be.true;
+			});
+		});
+		describe('when command is not owner', () => {
+			beforeEach(() => {
+				chain.loopStack = chain.command.next;
+			});
+			it('should return expected value', () => {
+				let expected = chain.hasOwnerLoopCommand(chain.command);
+				expect(expected).to.be.false;
+			});
 		});
 	});
 });

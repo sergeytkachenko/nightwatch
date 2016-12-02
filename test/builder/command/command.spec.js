@@ -1,3 +1,8 @@
+let mocha = require('mocha')
+let coMocha = require('co-mocha')
+
+coMocha(mocha);
+
 let assert = require('assert');
 let chai = require('chai');
 let sinon = require('sinon');
@@ -13,37 +18,39 @@ const events = require('../../../builder/Events');
 
 describe('Command', () => {
 	describe('execute', () => {
-		var command;
+		let command;
+		let nextExecute;
 		beforeEach(() => {
 			command = new Command(config.actions[0]);
-			sinon.stub(command, 'nextExecute', () => {});
+			let nextCommand = new Command(config.actions[1]);
+			nextCommand.execute = () => true;
+			command.setNext(nextCommand);
 			Spider.url = () => new Promise(resolve => resolve());
 		});
-		it('should call nextExecute', () => {
-			command.execute();
-			sinon.assert.calledOnce(command.nextExecute);
+		it('should call nextExecute', function * () {
+			let result = yield command.execute();
+			expect(result).to.be.true;
 		});
 	});
 	describe('nextExecute', () => {
-		var command;
-		var nextCommand;
+		let command;
 		beforeEach(() => {
 			command = new Command(config.actions[0]);
 		});
 		describe('when has next command', () => {
 			beforeEach(() => {
-				nextCommand = new Command(config.actions[1]);
+				let nextCommand = new Command(config.actions[1]);
 				command.setNext(nextCommand);
-				sinon.stub(nextCommand, 'execute', () => {});
+				nextCommand.execute = () => true;
 			});
 			it('should call nextExecute', () => {
-				command.nextExecute();
-				sinon.assert.calledOnce(nextCommand.execute);
+				let result = command.nextExecute();
+				expect(result).to.be.true;
 			});
 		});
 		describe('when has not next command', () => {
 			beforeEach(() => {
-				sinon.stub(events, 'emit', () => {});
+				sinon.stub(events, 'emit');
 			});
 			it('should call nextExecute', () => {
 				command.nextExecute();

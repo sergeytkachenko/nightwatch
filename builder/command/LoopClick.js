@@ -1,8 +1,8 @@
 const events = require('../Events');
-let Command = require('./Command');
+let LoopCommand = require('./LoopCommand');
 let Spider = require('../../spider');
 
-class LoopClick extends Command {
+class LoopClick extends LoopCommand {
 
 	constructor(config) {
 		super(config);
@@ -14,7 +14,7 @@ class LoopClick extends Command {
 	 */
 	execute() {
 		return this.beforeExecute()
-			.then(() => this.browserClick());
+			.then(() => this.browserClick()).then(() => this.nextExecute());
 	}
 
 	browserClick() {
